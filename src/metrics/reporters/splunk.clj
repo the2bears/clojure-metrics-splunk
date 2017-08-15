@@ -8,10 +8,6 @@
            [com.splunk Service ServiceArgs SSLSecurityProtocol]
            [io.github.zenmoto.metrics SplunkReporter SplunkReporter$Builder]))
 
-(defn- ^InetSocketAddress inet-socket-address
-  [^String hostname ^Long port]
-  (InetSocketAddress. hostname (int port)))
-
 (defn- ^SplunkReporter$Builder builder-for-registry
   [^MetricRegistry reg]
   (SplunkReporter/forRegistry reg))
@@ -19,16 +15,16 @@
 (defn- resolve-ssl-security-protocol [ssp]
   (SSLSecurityProtocol/valueOf ssp))
 
-(defn- splunk-service [{:keys [splunk app host owner password port
-                               scheme ssl-security-protocol token username] :as opts}]
-                                        ;build the splunk service here
+(defn- splunk-service
+  [{:keys [app host owner password port scheme
+           ssl-security-protocol token username] :as opts}]
   (let [args (ServiceArgs.)]
     (when-let [^String a app]
       (.setApp args a))
     (when-let [^String h host]
       (.setHost args h))
     (when-let [^String o owner]
-      (.setOwnder args o))
+      (.setOwner args o))
     (when-let [^String pw password]
       (.setPassword args pw))
     (when-let [^Int p port]
